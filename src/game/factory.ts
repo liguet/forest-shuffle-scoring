@@ -87,9 +87,12 @@ export const createWoodyPlant = (
 export const createSapling = (): WoodyPlantCard =>
   createWoodyPlant(Sapling, Sapling.variants[0]);
 
-export const createForest = (cave: Cave): Forest => ({
-  woodyPlants: [],
+export const createForest = (
+  cave: Cave,
+  woodyPlants?: WoodyPlantCard[],
+): Forest => ({
   cave,
+  woodyPlants: woodyPlants ?? [],
 });
 
 export const createDeck = (gameBoxes: GameBox[] = []): Deck => ({
@@ -117,10 +120,14 @@ export const createDeck = (gameBoxes: GameBox[] = []): Deck => ({
   ),
 });
 
-export const createPlayer = (name: string, cave: Cave): Player => ({
+export const createPlayer = (
+  name: string,
+  cave: Cave,
+  woodyPlants?: WoodyPlantCard[],
+): Player => ({
   id: generateId(),
   name,
-  forest: createForest(cave),
+  forest: createForest(cave, woodyPlants),
 });
 
 export const createGame = (gameBoxes: GameBox[]): Game => ({

@@ -8,6 +8,7 @@ import {
   Game,
   Player,
   WoodyPlantCard,
+  getDwellersOfForest,
   getDwellersOfWoodyPlant,
 } from "@/game";
 
@@ -86,8 +87,17 @@ export const addPlayer = (game: Game, player: Player) =>
 
     draft.players.push(player);
 
-    draft.deck.caves = draft.deck.caves.filter(
-      (c) => c.id !== player.forest.cave.id,
+    const caveId = player.forest.cave.id;
+    draft.deck.caves = draft.deck.caves.filter((c) => c.id !== caveId);
+
+    const woodyPlantIds = player.forest.woodyPlants.map((w) => w.id);
+    draft.deck.woodyPlants = draft.deck.woodyPlants.filter(
+      (w) => !woodyPlantIds.includes(w.id),
+    );
+
+    const dwellerIds = getDwellersOfForest(player.forest).map((d) => d.id);
+    draft.deck.dwellers = draft.deck.dwellers.filter(
+      (d) => !dwellerIds.includes(d.id),
     );
   });
 
