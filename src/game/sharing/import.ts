@@ -21,6 +21,8 @@ import * as WoodyPlants from "@/game/woody-plants";
 export enum ImportErrorType {
   InvalidData = "INVALID_DATA",
   InvalidSchema = "INVALID_SCHEMA",
+  AppVersionMismatch = "APP_VERSION_MISMATCH",
+  GameBoxesMismatch = "GAME_BOXES_MISMATCH",
   UnavailableCards = "UNAVAILABLE_CARDS",
 }
 
@@ -64,11 +66,21 @@ export const importPlayer = (
   }
 
   const {
+    appVersion,
+    gameBoxes,
     player: {
       name,
       forest: { cave: caveDto, woodyPlants: woodyPlantDtos },
     },
   } = exportDto;
+
+  if (appVersion !== import.meta.env.PACKAGE_VERSION) {
+    return createErrorResult(ImportErrorType.AppVersionMismatch);
+  }
+
+  if (!gameBoxes.every((gb) => game.gameBoxes.includes(gb))) {
+    return createErrorResult(ImportErrorType.GameBoxesMismatch);
+  }
 
   const cave = findCaveOfDto(game.deck, caveDto);
 

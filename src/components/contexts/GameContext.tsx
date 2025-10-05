@@ -73,17 +73,12 @@ const reducer: Reducer<State, GameAction> = (state, action) => {
   }
 
   switch (action.type) {
-    case GameActionType.AddPlayer: {
-      const player = createPlayer(
-        action.payload.playerName,
-        action.payload.cave,
-      );
+    case GameActionType.AddPlayer:
       return {
         ...state,
-        game: addPlayer(state.game, player),
-        playerId: player.id,
+        game: addPlayer(state.game, action.payload.player),
+        playerId: action.payload.player.id,
       };
-    }
 
     case GameActionType.RemovePlayer:
       return {

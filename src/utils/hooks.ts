@@ -1,4 +1,5 @@
-import { useCallback, useEffect, useMemo, useRef } from "react";
+import QrScanner from "qr-scanner";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useMediaQuery } from "usehooks-ts";
 import { useSearch } from "wouter";
 
@@ -21,6 +22,20 @@ export const usePrevious = <T>(value: T): T | undefined => {
   });
 
   return ref.current;
+};
+
+export const useHasCamera = (): boolean | null => {
+  const [hasCamera, setHasCamera] = useState<boolean | null>(null);
+
+  useEffect(() => {
+    QrScanner.hasCamera()
+      .then(setHasCamera)
+      .catch((error) =>
+        console.error("Failed to check camera availability:", error),
+      );
+  }, []);
+
+  return hasCamera;
 };
 
 export const useSearchParam = (name: string) => {

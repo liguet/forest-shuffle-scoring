@@ -1,4 +1,4 @@
-import { MessageDescriptor, defineMessages } from "react-intl";
+import { IntlShape, MessageDescriptor, defineMessages } from "react-intl";
 
 const messages = defineMessages<string, MessageDescriptor>({
   BAT_CAVE: {
@@ -28,3 +28,8 @@ const messages = defineMessages<string, MessageDescriptor>({
 });
 
 export default messages;
+
+export const getLocalizedCaveName = (intl: IntlShape, name: string) => {
+  const message = messages[name];
+  return message ? intl.formatMessage(message) : null;
+};
