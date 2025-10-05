@@ -3,6 +3,7 @@ import { FormattedMessage } from "react-intl";
 import { useBoolean } from "usehooks-ts";
 import { Link } from "wouter";
 
+import CheckCircle from "@mui/icons-material/CheckCircle";
 import EmojiEventsIcon from "@mui/icons-material/EmojiEvents";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import { Box, Button, Divider, Stack } from "@mui/joy";
@@ -11,12 +12,13 @@ import { addPlayer, setCave } from "@/actions/game";
 import AddPlayerDrawer from "@/components/common/AddPlayerDrawer";
 import GameContext from "@/components/contexts/GameContext";
 import { Cave } from "@/game";
+import { ScoringMode } from "@/types";
 import { MAX_PLAYERS } from "@/utils/constants";
 
 import ForestSummary from "./ForestSummary";
 
 const Footer = () => {
-  const { game, playerId, dispatch } = useContext(GameContext);
+  const { scoringMode, game, playerId, dispatch } = useContext(GameContext);
 
   const {
     value: isAddPlayerDrawerOpen,
@@ -49,44 +51,58 @@ const Footer = () => {
         }}
       />
 
-      <Stack
-        direction="row"
-        alignItems="center"
-        justifyContent="space-around"
-        gap={2}
-      >
-        <Button
-          fullWidth
-          variant="soft"
-          color="neutral"
-          startDecorator={<PersonAddIcon />}
-          disabled={hasMaxPlayers}
-          onClick={openAddPlayerDrawer}
+      {scoringMode === ScoringMode.Host ? (
+        <Stack
+          direction="row"
+          alignItems="center"
+          justifyContent="space-around"
+          gap={2}
         >
-          <FormattedMessage
-            id="ForestView.Footer.nextPlayer"
-            defaultMessage="Next player"
-          />
-        </Button>
+          <Button
+            fullWidth
+            variant="soft"
+            color="neutral"
+            startDecorator={<PersonAddIcon />}
+            disabled={hasMaxPlayers}
+            onClick={openAddPlayerDrawer}
+          >
+            <FormattedMessage
+              id="ForestView.Footer.nextPlayer"
+              defaultMessage="Next player"
+            />
+          </Button>
+          <Button
+            fullWidth
+            startDecorator={<EmojiEventsIcon />}
+            color="primary"
+            component={Link}
+            to="/scoring"
+          >
+            <FormattedMessage
+              id="ForestView.Footer.scoreGame"
+              defaultMessage="Score game"
+            />
+          </Button>
+        </Stack>
+      ) : (
         <Button
           fullWidth
-          startDecorator={<EmojiEventsIcon />}
-          color="primary"
+          startDecorator={<CheckCircle />}
           component={Link}
-          to="/scoring"
+          to="/export"
         >
           <FormattedMessage
-            id="ForestView.Footer.scoreGame"
-            defaultMessage="Score game"
+            id="ForestView.Footer.completeScoring"
+            defaultMessage="Complete scoring"
           />
         </Button>
-      </Stack>
+      )}
 
       {game && (
         <AddPlayerDrawer
           open={isAddPlayerDrawerOpen}
           game={game}
-          onCreate={(values) => dispatch(addPlayer(values))}
+          onConfirm={(player) => dispatch(addPlayer({ player }))}
           onClose={closeAddPlayerDrawer}
         />
       )}

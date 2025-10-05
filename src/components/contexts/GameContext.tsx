@@ -17,14 +17,17 @@ import {
   exchangeWoodyPlant,
   setCave,
 } from "@/game/operations";
+import { ScoringMode } from "@/types";
 import invariant from "@/utils/invariant";
 
 interface State {
+  scoringMode: ScoringMode | null;
   game: Game | null;
   playerId: string | null;
 }
 
 const defaultState: State = {
+  scoringMode: null,
   game: null,
   playerId: null,
 };
@@ -59,6 +62,7 @@ const reducer: Reducer<State, GameAction> = (state, action) => {
 
     return {
       ...state,
+      scoringMode: action.payload.scoringMode,
       game: addPlayer(game, player),
       playerId: player.id,
     };

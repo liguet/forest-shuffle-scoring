@@ -3,6 +3,7 @@ import { useHashLocation } from "wouter/use-hash-location";
 
 import AboutView from "@/components/views/AboutView";
 import CreateGameView from "@/components/views/CreateGameView";
+import ExportView from "@/components/views/ExportView";
 import ForestView from "@/components/views/ForestView";
 import ScoringView from "@/components/views/ScoringView";
 
@@ -11,6 +12,7 @@ const RootContainer = () => (
     <Route path="/new" component={CreateGameView} />
     <Route path="/forest" component={ForestView} />
     <Route path="/scoring" component={ScoringView} />
+    <Route path="/export" component={ExportView} />
     <Route path="/about" component={AboutView} />
 
     <Redirect to="/new" />

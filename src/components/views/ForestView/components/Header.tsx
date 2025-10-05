@@ -3,6 +3,7 @@ import CountUp from "react-countup";
 import { useBoolean } from "usehooks-ts";
 import { useLocation } from "wouter";
 
+import PersonIcon from "@mui/icons-material/Person";
 import ReplayIcon from "@mui/icons-material/Replay";
 import { Box, IconButton, Stack, Typography } from "@mui/joy";
 
@@ -50,7 +51,7 @@ const Header = () => {
 
       <Box sx={{ display: { sm: "none" }, flexBasis: "100%", mb: 2 }} />
 
-      {game && (
+      {game && game.players.length > 1 ? (
         <PlayerSelect
           variant="plain"
           players={game.players}
@@ -62,6 +63,20 @@ const Header = () => {
             minWidth: "200px",
           }}
         />
+      ) : (
+        <Typography
+          level="body-md"
+          startDecorator={<PersonIcon sx={{ mr: "2px" }} />}
+          sx={{
+            flexGrow: { xs: 1, sm: 0 },
+            flexBasis: { xs: "0", sm: "auto" },
+            minWidth: "191px",
+            my: "6px",
+            ml: "9px",
+          }}
+        >
+          {game?.players[0]?.name}
+        </Typography>
       )}
 
       {playerScore != null && (

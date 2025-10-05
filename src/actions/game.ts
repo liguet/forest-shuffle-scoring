@@ -1,4 +1,4 @@
-import { Cave, DwellerCard, GameBox, WoodyPlantCard } from "@/game";
+import { ScoringMode } from "@/types";
 
 export enum GameActionType {
   CreateGame = "CREATE_GAME",
@@ -15,6 +15,7 @@ export enum GameActionType {
 }
 
 export interface CreateGamePayload {
+  scoringMode: ScoringMode;
   gameBoxes: GameBox[];
   playerName: string;
   caveName: string;
