@@ -9,7 +9,7 @@ import { Cave, Game, getDwellersOfForest } from "@/game";
 import { getForest } from "@/game/helpers";
 import { useBreakpoint } from "@/utils/hooks";
 
-import CaveModal from "./CaveModal";
+import CaveDrawer from "./CaveDrawer";
 
 interface CardCountProps {
   label: ReactNode;
@@ -50,9 +50,9 @@ const ForestSummary = ({
   onCaveChange,
 }: ForestSummaryProps) => {
   const {
-    value: isCaveModalOpen,
-    setTrue: openCaveModal,
-    setFalse: closeCaveModal,
+    value: isCaveDrawerOpen,
+    setTrue: openCaveDrawer,
+    setFalse: closeCaveDrawer,
   } = useBoolean(false);
 
   const forest = getForest(game, playerId);
@@ -94,17 +94,17 @@ const ForestSummary = ({
         }
         value={forest.cave.cardCount}
         endDecorator={
-          <Link color="neutral" onClick={openCaveModal}>
+          <Link color="neutral" onClick={openCaveDrawer}>
             <EditIcon />
           </Link>
         }
       />
 
-      <CaveModal
-        open={isCaveModalOpen}
+      <CaveDrawer
+        open={isCaveDrawerOpen}
         game={game}
         playerId={playerId}
-        onClose={closeCaveModal}
+        onClose={closeCaveDrawer}
         onConfirm={onCaveChange}
       />
     </Stack>
