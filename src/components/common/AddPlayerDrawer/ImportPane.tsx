@@ -38,10 +38,11 @@ const ERROR_MESSAGES = defineMessages({
 
 interface ImportPaneProps {
   game: Game;
+  isActive: boolean;
   onSubmit: (player: Player) => void;
 }
 
-const ImportPane = ({ game, onSubmit }: ImportPaneProps) => {
+const ImportPane = ({ game, isActive, onSubmit }: ImportPaneProps) => {
   const intl = useIntl();
 
   const [errorResult, setErrorResult] =
@@ -89,6 +90,7 @@ const ImportPane = ({ game, onSubmit }: ImportPaneProps) => {
         />
       </Typography>
       <QrCodeScanner
+        disabled={!isActive}
         error={errorMessage}
         onResult={handleScanResult}
         onRetry={() => setErrorResult(null)}

@@ -12,6 +12,7 @@ type OnResultCallback = (result: string) => void;
 
 interface QrCodeScannerProps {
   sx?: SxProps;
+  disabled?: boolean;
   error?: React.ReactNode;
   onResult?: OnResultCallback;
   onRetry?: () => void;
@@ -19,6 +20,7 @@ interface QrCodeScannerProps {
 
 const QrCodeScanner = ({
   sx,
+  disabled,
   error,
   onResult,
   onRetry,
@@ -33,8 +35,32 @@ const QrCodeScanner = ({
 
   const hasPropsError = !!error;
   const hasError = hasScannerError || hasPropsError;
-  const isLoading = !hasError && !isVideoPlaying;
-  const isReady = !hasError && !isLoading;
+  const isLoading = !disabled && !hasError && !isVideoPlaying;
+  const isReady = !disabled && !hasError && !isLoading;
+
+  const initScanner = useCallback(() => {
+    if (!videoRef.current) return;
+
+    const scanner = new QrScanner(
+      videoRef.current,
+      ({ data }) => {
+        if (data !== lastResult.current) {
+          window.navigator.vibrate?.(40);
+          onResultRef.current?.(data);
+          lastResult.current = data;
+        }
+      },
+      {
+        onDecodeError: () => {
+          lastResult.current = null;
+        },
+        returnDetailedScanResult: true,
+      },
+    );
+    scannerRef.current = scanner;
+
+    return scanner;
+  }, []);
 
   const startScanner = useCallback(() => {
     setHasScannerError(false);
@@ -56,36 +82,21 @@ const QrCodeScanner = ({
   }, [onResult]);
 
   useEffect(() => {
-    if (!videoRef.current) return;
-
-    const scanner = new QrScanner(
-      videoRef.current,
-      ({ data }) => {
-        if (data !== lastResult.current) {
-          window.navigator.vibrate?.(40);
-          onResultRef.current?.(data);
-          lastResult.current = data;
-        }
-      },
-      {
-        onDecodeError: () => {
-          lastResult.current = null;
-        },
-        returnDetailedScanResult: true,
-      },
-    );
-    scannerRef.current = scanner;
-
-    return () => scanner.destroy();
-  }, []);
+    if (!disabled) {
+      const scanner = initScanner();
+      return () => scanner?.destroy();
+    }
+  }, [disabled, initScanner]);
 
   useEffect(() => {
+    if (disabled) return;
+
     if (hasPropsError) {
       scannerRef.current?.pause();
     } else {
       startScanner();
     }
-  }, [hasPropsError, startScanner]);
+  }, [disabled, hasPropsError, startScanner]);
 
   return (
     <Box
