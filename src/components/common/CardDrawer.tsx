@@ -7,8 +7,6 @@ import CardSelect from "@/components/common/CardSelect";
 import ResponsiveDrawer from "@/components/common/ResponsiveDrawer";
 import { Card, GameBox, TreeSymbol } from "@/game";
 
-const transitionDuration = 300;
-
 interface CardDrawerProps<TCard extends Card> {
   action: "add" | "exchange";
   open: boolean;
@@ -44,28 +42,12 @@ const CardDrawer = <TCard extends Card>({
     setTreeSymbol(selectedCard?.treeSymbol);
   }, [open, selectedCard]);
 
-  const handleSelectCard = (card: TCard) => {
-    setTimeout(() => onSelectCard?.(card), transitionDuration);
-    onClose();
-  };
-
-  const handleRemoveCard = () => {
-    setTimeout(() => onRemoveCard?.(), transitionDuration);
-    onClose();
-  };
-
   return (
     <ResponsiveDrawer
-      anchorSmall="bottom"
-      anchorBig="right"
-      breakpoint="sm"
-      size="sm"
       open={open}
       onClose={onClose}
       sx={{
-        "--Drawer-horizontalSize": "400px",
         "--Drawer-verticalSize": "min(571px, 65%)",
-        "--Drawer-transitionDuration": `${transitionDuration}ms`,
       }}
     >
       <ModalClose />
@@ -93,9 +75,9 @@ const CardDrawer = <TCard extends Card>({
           onGameBoxChange={setGameBox}
           treeSymbol={treeSymbol}
           onTreeSymbolChange={setTreeSymbol}
-          onSelect={handleSelectCard}
+          onSelect={onSelectCard}
           canRemove={!!selectedCard}
-          onRemove={handleRemoveCard}
+          onRemove={onRemoveCard}
         />
       </DialogContent>
     </ResponsiveDrawer>

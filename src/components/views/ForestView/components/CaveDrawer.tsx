@@ -25,8 +25,6 @@ const getFormValues = (cave?: Cave) => ({
   caveCardCount: cave?.cardCount ?? 0,
 });
 
-const transitionDuration = 300;
-
 const CaveDrawer = ({
   open,
   game,
@@ -68,19 +66,7 @@ const CaveDrawer = ({
   };
 
   return (
-    <ResponsiveDrawer
-      anchorSmall="bottom"
-      anchorBig="right"
-      breakpoint="sm"
-      size="md"
-      open={open}
-      onClose={onClose}
-      sx={{
-        "--Drawer-horizontalSize": "400px",
-        "--Drawer-transitionDuration": `${transitionDuration}ms`,
-        "--Drawer-verticalSize": "auto",
-      }}
-    >
+    <ResponsiveDrawer open={open} onClose={onClose}>
       <ModalClose />
 
       <DialogTitle>

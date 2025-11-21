@@ -8,12 +8,10 @@ import { DialogContent, DialogTitle, ModalClose } from "@mui/joy";
 import OptionsBar from "@/components/common/OptionsBar";
 import ResponsiveDrawer from "@/components/common/ResponsiveDrawer";
 import { Game, Player } from "@/game";
-import { useHasCamera, usePrevious } from "@/utils/hooks";
+import { useHasCamera } from "@/utils/hooks";
 
 import ImportPane from "./ImportPane";
 import ManualPane from "./ManualPane";
-
-const transitionDuration = 300;
 
 enum AddPlayerMode {
   MANUAL = "manual",
@@ -35,43 +33,26 @@ const AddPlayerDrawer = ({
 }: AddPlayerDrawerProps) => {
   const hasCamera = useHasCamera();
 
-  const [isClosing, setIsClosing] = useState(false);
   const [mode, setMode] = useState<AddPlayerMode>(AddPlayerMode.MANUAL);
 
-  const prevOpen = usePrevious(open);
   useEffect(() => {
-    if (prevOpen && !open) {
-      setIsClosing(true);
-      const timeout = setTimeout(() => setIsClosing(false), transitionDuration);
-      return () => clearTimeout(timeout);
-    }
-  }, [open, prevOpen]);
-
-  useEffect(() => {
-    if (!open && !isClosing) {
+    if (open) {
       setMode(AddPlayerMode.MANUAL);
     }
-  }, [open, isClosing]);
+  }, [open]);
 
   const handleSubmit = (player: Player) => {
     onConfirm?.(player);
     onClose?.();
   };
 
+  const handleClose = () => {
+    setMode(AddPlayerMode.MANUAL);
+    onClose?.();
+  };
+
   return (
-    <ResponsiveDrawer
-      anchorSmall="bottom"
-      anchorBig="right"
-      breakpoint="sm"
-      size="md"
-      open={open}
-      onClose={onClose}
-      sx={{
-        "--Drawer-horizontalSize": "400px",
-        "--Drawer-transitionDuration": `${transitionDuration}ms`,
-        "--Drawer-verticalSize": "auto",
-      }}
-    >
+    <ResponsiveDrawer open={open} onClose={handleClose}>
       <ModalClose />
 
       <DialogTitle>
@@ -81,39 +62,34 @@ const AddPlayerDrawer = ({
         />
       </DialogTitle>
 
-      {(open || isClosing) && (
-        <DialogContent sx={{ m: 1.5 }}>
-          {hasCamera && (
-            <OptionsBar value={mode} onChange={setMode} sx={{ mb: 2 }}>
-              <OptionsBar.Option
-                icon={<EditIcon />}
-                value={AddPlayerMode.MANUAL}
-              >
-                <FormattedMessage
-                  id="AddPlayerDrawer.mode.manual"
-                  defaultMessage="Enter details"
-                />
-              </OptionsBar.Option>
-              <OptionsBar.Option
-                icon={<QrCodeScannerIcon />}
-                value={AddPlayerMode.IMPORT}
-              >
-                <FormattedMessage
-                  id="AddPlayerDrawer.mode.import"
-                  defaultMessage="Scan QR code"
-                />
-              </OptionsBar.Option>
-            </OptionsBar>
-          )}
+      <DialogContent sx={{ m: 1.5 }}>
+        {hasCamera && (
+          <OptionsBar value={mode} onChange={setMode} sx={{ mb: 2 }}>
+            <OptionsBar.Option icon={<EditIcon />} value={AddPlayerMode.MANUAL}>
+              <FormattedMessage
+                id="AddPlayerDrawer.mode.manual"
+                defaultMessage="Enter details"
+              />
+            </OptionsBar.Option>
+            <OptionsBar.Option
+              icon={<QrCodeScannerIcon />}
+              value={AddPlayerMode.IMPORT}
+            >
+              <FormattedMessage
+                id="AddPlayerDrawer.mode.import"
+                defaultMessage="Scan QR code"
+              />
+            </OptionsBar.Option>
+          </OptionsBar>
+        )}
 
-          {mode === AddPlayerMode.MANUAL && (
-            <ManualPane game={game} onSubmit={handleSubmit} />
-          )}
-          {mode === AddPlayerMode.IMPORT && (
-            <ImportPane game={game} onSubmit={handleSubmit} />
-          )}
-        </DialogContent>
-      )}
+        {mode === AddPlayerMode.MANUAL && (
+          <ManualPane game={game} onSubmit={handleSubmit} />
+        )}
+        {mode === AddPlayerMode.IMPORT && (
+          <ImportPane game={game} onSubmit={handleSubmit} />
+        )}
+      </DialogContent>
     </ResponsiveDrawer>
   );
 };
