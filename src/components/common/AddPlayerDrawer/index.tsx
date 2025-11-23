@@ -40,11 +40,11 @@ const AddPlayerDrawer = ({
 
   useEffect(() => {
     if (open) {
-      setMode(AddPlayerMode.MANUAL);
+      handleChangeMode(AddPlayerMode.MANUAL);
     }
   }, [open]);
 
-  const handleChange = (newMode: AddPlayerMode) => {
+  const handleChangeMode = (newMode: AddPlayerMode) => {
     setMode(newMode);
 
     const newPaneRef =
@@ -75,7 +75,7 @@ const AddPlayerDrawer = ({
 
       <DialogContent sx={{ m: 1.5 }}>
         {hasCamera && (
-          <OptionsBar value={mode} onChange={handleChange} sx={{ mb: 2 }}>
+          <OptionsBar value={mode} onChange={handleChangeMode} sx={{ mb: 2 }}>
             <OptionsBar.Option icon={<EditIcon />} value={AddPlayerMode.MANUAL}>
               <FormattedMessage
                 id="AddPlayerDrawer.mode.manual"

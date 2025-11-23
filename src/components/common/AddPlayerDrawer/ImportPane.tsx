@@ -1,4 +1,4 @@
-import { useCallback, useContext, useState } from "react";
+import { useCallback, useContext, useEffect, useState } from "react";
 import { FormattedMessage, defineMessages, useIntl } from "react-intl";
 
 import { Box, Button, Stack, Typography } from "@mui/joy";
@@ -49,6 +49,12 @@ const ImportPane = ({ game, isActive, onSubmit }: ImportPaneProps) => {
 
   const [errorResult, setErrorResult] =
     useState<ErrorPlayerImportResult | null>(null);
+
+  useEffect(() => {
+    if (!isActive) {
+      setErrorResult(null);
+    }
+  }, [isActive]);
 
   const handleScanResult = useCallback(
     (data: string) => {
