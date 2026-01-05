@@ -21,6 +21,7 @@ import {
   Card,
   CardType,
   EXPANSION_CARD_TYPES,
+  EXPANSION_GAME_BOXES,
   GAME_BOX_PRIORITIES,
   GameBox,
   TreeSymbol,
@@ -39,6 +40,7 @@ const getOptions = <TCard extends Card, TValue extends string>(
     treeSymbol?: TreeSymbol | null;
     gameBox?: GameBox;
   } = {},
+  sortKeySelector?: (value: TValue, message: string) => unknown,
 ) => {
   const { cardName, treeSymbol, gameBox } = filters;
   const matchingCards = cards.filter(
@@ -49,9 +51,11 @@ const getOptions = <TCard extends Card, TValue extends string>(
       (gameBox === undefined || c.gameBox === gameBox),
   );
 
-  return _.orderBy(_.uniqBy(matchingCards, valueSelector), (c) =>
-    messageSelector(valueSelector(c)!),
-  );
+  return _.orderBy(_.uniqBy(matchingCards, valueSelector), (c) => {
+    const value = valueSelector(c)!;
+    const message = messageSelector(value);
+    return sortKeySelector ? sortKeySelector(value, message) : message;
+  });
 };
 
 const getUnique = <T,>(cards: Card[], selector: (card: Card) => T) => {
@@ -133,6 +137,7 @@ const CardSelect = <TCard extends Card>({
     (c) => c.gameBox,
     (g) => intl.formatMessage(GameBoxMessages[g]),
     { cardName, treeSymbol },
+    (value, message) => [EXPANSION_GAME_BOXES.includes(value), message],
   );
   const canSelectGameBox =
     treeSymbol !== undefined && gameBoxOptions.length > 1;
