@@ -56,7 +56,10 @@ const getUnique = <T,>(cards: Card[], selector: (card: Card) => T) => {
 const getPreselectedGameBox = (cards: Card[]): GameBox | undefined => {
   // If all cards match in their types and tree symbol, the game box
   // doesn't matter and can be preselected based on the priority
-  if (_.uniqBy(cards, ["types", "treeSymbol"]).length === 1) {
+  const comparator = (a: Card, b: Card) =>
+    _.isEqual(a.types, b.types) && a.treeSymbol === b.treeSymbol;
+
+  if (_.uniqWith(cards, comparator).length === 1) {
     return _.sortBy(
       cards.map((c) => c.gameBox),
       (g) => GAME_BOX_PRIORITIES[g],
@@ -140,7 +143,10 @@ const CardSelect = <TCard extends Card>({
   ) => {
     let candidates = cards.filter((c) => c.name === newCardName);
 
-    newGameBox = newGameBox ?? getPreselectedGameBox(candidates);
+    newGameBox =
+      newGameBox ??
+      getUnique(candidates, (c) => c.gameBox) ??
+      getPreselectedGameBox(candidates);
     if (newGameBox) {
       candidates = candidates.filter((c) => c.gameBox === newGameBox);
     }
