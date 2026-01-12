@@ -26,6 +26,10 @@ const OPTIONS: Record<Locale, LocaleOptions> = {
     flag: "🇧🇷",
     label: "Português - Brasil",
   },
+  [Locale.Zh]: {
+    flag: "🇨🇳",
+    label: "简体中文",
+  },
 };
 
 const SORTED_OPTIONS = _.orderBy(
