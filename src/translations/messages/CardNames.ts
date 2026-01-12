@@ -392,7 +392,7 @@ const messages = defineMessages<string, MessageDescriptor | undefined>({
   },
   SABLE: {
     id: "CardNames.Sable",
-    defaultMessage: "CardNames.Sable",
+    defaultMessage: "Sable",
   },
   SAVIS_PIPISTRELLE: {
     id: "CardNames.SavisPipistrelle",
