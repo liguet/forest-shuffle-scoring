@@ -3,6 +3,7 @@ export enum Locale {
   En = "en",
   Nl = "nl",
   PtBr = "pt-br",
+  Zh = "zh",
 }
 
 export enum ScoringMode {
